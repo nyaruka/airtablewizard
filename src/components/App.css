@@ -1,0 +1,46 @@
+@import url('https://fonts.googleapis.com/css?family=Open+Sans|Roboto+Mono');
+
+* {
+  color: #444;
+  font-size: 14px;
+  outline: none;
+  font-family: 'Open Sans', sans-serif;
+}
+
+.App {
+  padding: 1em;
+}
+
+.App-header h1, .App-header h1 span {
+  padding: 0.5em 0 0.5em 0;
+  margin: 0;
+  font-size: 24px;
+}
+
+.section {
+  padding: 10px;
+}
+
+label {
+  display: block;
+  font-weight: bold;
+  font-size: 16px;
+  margin-bottom: 5px;
+}
+
+form p {
+  font-size: 12px;
+}
+
+form input {
+  font-size: 14px;
+  padding: 3px;
+}
+
+form input[readonly] {
+  background-color: #EEE;
+}
+
+th {
+  font-size: 14px;
+}
