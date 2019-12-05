@@ -9,6 +9,7 @@ interface State {
   baseID: string;
   tableName: string;
   conditions: Condition[];
+  maxRecords: number;
   formula: string;
   url: string;
 }
@@ -16,11 +17,12 @@ interface State {
 class App extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
-    this.state = { baseID: "", tableName: "", conditions: [], formula: "", url: "" };
+    this.state = { baseID: "", tableName: "", conditions: [], maxRecords: 0, formula: "", url: "" };
 
     this.handleChangeBaseID = this.handleChangeBaseID.bind(this);
     this.handleChangeTableName = this.handleChangeTableName.bind(this);
     this.handleChangeFiltering = this.handleChangeFiltering.bind(this);
+    this.handleChangeMaxRecords = this.handleChangeMaxRecords.bind(this);
   }
 
   handleChangeBaseID(event: any) {
@@ -36,6 +38,10 @@ class App extends React.Component<Props, State> {
     this.setState({ conditions: filtering.getConditions() }, this.updateURL);
   }
 
+  handleChangeMaxRecords(event: any) {
+    this.setState({ maxRecords: event.target.value }, this.updateURL);
+  }
+
   updateURL() {
     const formula = new Formula(this.state.conditions);
     const renderedFormula = formula.render();
@@ -43,7 +49,11 @@ class App extends React.Component<Props, State> {
     let encodedFormula = encodeURIComponent(renderedFormula)
     encodedFormula = encodedFormula.replace("%40", "@") // put @ back so expressions work
 
-    const url = `https://api.airtable.com/v0/${this.state.baseID}/${this.state.tableName}?filterByFormula=${encodedFormula}`;
+    let url = `https://api.airtable.com/v0/${this.state.baseID}/${this.state.tableName}?filterByFormula=${encodedFormula}`;
+
+    if (this.state.maxRecords > 0) {
+      url += `&maxRecords=${this.state.maxRecords}`
+    }
 
     this.setState({ formula: renderedFormula, url: url });
   }
@@ -65,6 +75,10 @@ class App extends React.Component<Props, State> {
           <div className="section">
             <label><span role="img" aria-label="Dial">🎛️</span> Filtering</label>
             <Filtering onChange={this.handleChangeFiltering} />
+          </div>
+          <div className="section">
+            <label><span role="img" aria-label="Number">#️⃣</span> Max Records</label>
+            <input type="number" value={this.state.maxRecords} onChange={this.handleChangeMaxRecords} />
           </div>
           <div className="section">
             <label htmlFor="formula"><span role="img" aria-label="Lightning">⚡</span> Formula</label>
